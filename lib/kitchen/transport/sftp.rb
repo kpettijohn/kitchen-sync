@@ -282,7 +282,8 @@ module Kitchen
         def tar(path)
           tarfile = StringIO.new("")
           Gem::Package::TarWriter.new(tarfile) do |tar|
-            Dir[File.join(path, "**/*")].each do |file|
+            files = Dir.glob(File.join(path, "**/*"), File::FNM_DOTMATCH) - %w[. ..]
+            files.each do |file|
               mode = File.stat(file).mode
               relative_file = file.sub /^#{Regexp::escape path}\/?/, ''
 
